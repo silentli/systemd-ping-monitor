@@ -1,0 +1,29 @@
+[Unit]
+Description=Ping Watchdog Service
+After=network.target
+
+[Service]
+Type=notify
+User=pingwatchdog
+Environment=PING_TARGET=8.8.8.8
+Environment=PING_INTERVAL=60
+Environment=PING_TIMEOUT=5
+Environment=PING_COUNT=1
+ExecStart=/usr/local/sbin/ping_watchdog.sh
+Restart=on-failure
+RestartSec=5
+WatchdogSec=30
+NotifyAccess=all
+
+# Logging configuration
+StandardOutput=append:/var/log/ping-watchdog.log
+StandardError=append:/var/log/ping-watchdog.log
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=full
+ProtectHome=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
